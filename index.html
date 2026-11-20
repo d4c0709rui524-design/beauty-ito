@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#FBF6EE">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Beauty ito">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23D7194D'/%3E%3Ctext x='50' y='66' font-size='46' text-anchor='middle' fill='white' font-family='serif' font-weight='900'%3Eito%3C/text%3E%3C/svg%3E">
+<title>Beauty ito | Beauty Potluck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Playfair+Display:ital,wght@0,800;0,900;1,800&family=Klee+One:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF6EE;
+  --crimson:#D7194D;
+  --crimson-d:#B30F3D;
+  --pink:#F2557E;
+  --pink-l:#FFE3EA;
+  --brown:#4A1A1F;
+  --ink:#262626;
+  --sub:#8E8E8E;
+  --line:#EFEFEF;
+  --gold:#D9B26A;
+  --serif:"Noto Serif JP","Hiragino Mincho ProN",serif;
+  --latin:"Playfair Display","Noto Serif JP",serif;
+  --hand:"Klee One","Noto Serif JP",serif;
+  --ui:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  position:fixed;inset:0;width:100%;
+  font-family:var(--ui);color:var(--ink);background:var(--cream);
+  overflow:hidden;overscroll-behavior:none;touch-action:manipulation;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+}
+button{touch-action:manipulation}
+button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer}
+
+/* ===== 水彩背景 ===== */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(28px);opacity:.55}
+.b1{width:260px;height:180px;background:#7EC8F2;top:-60px;left:-80px;transform:rotate(-20deg)}
+.b2{width:220px;height:200px;background:#FFE07A;top:30%;left:-120px}
+.b3{width:240px;height:200px;background:#FFB4C4;top:-40px;right:-110px}
+.b4{width:230px;height:190px;background:#BFE3A6;bottom:16%;right:-120px}
+.b5{width:280px;height:200px;background:#8FD1F5;bottom:-90px;left:-60px}
+.b6{width:200px;height:160px;background:#FFD08A;bottom:-60px;right:-40px}
+.stroke{position:absolute;opacity:.75}
+.dots span{position:absolute;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff 0 20%,rgba(140,205,245,.55) 45%,rgba(140,205,245,.15) 75%);
+  border:1px solid rgba(255,255,255,.7)}
+
+/* ===== レイアウト ===== */
+.app{position:relative;z-index:1;height:100vh;height:var(--appH,100dvh);display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) max(env(safe-area-inset-bottom),10px) env(safe-area-inset-left)}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 4px}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-mark{font-family:var(--latin);font-style:italic;font-weight:800;font-size:20px;letter-spacing:-1px;
+  background:linear-gradient(90deg,#F2A93B,#2E6FD8 50%,#6DBE45);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand-txt{font-family:var(--latin);font-size:11px;line-height:1.1;color:#2E6FD8;font-weight:800}
+.icons{display:flex;gap:4px}
+.icon-btn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
+.icon-btn:active{background:rgba(0,0,0,.05)}
+.icon-btn svg{width:24px;height:24px}
+
+.screen{flex:1;display:none;flex-direction:column;align-items:center;padding:0 24px;text-align:center;min-height:0}
+.screen.active{display:flex;animation:fadeUp .45s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ===== ホーム ===== */
+.home-main{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%;max-width:420px;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;
+  background:#fff;box-shadow:0 1px 0 var(--line),0 0 0 1px var(--line) inset;
+  font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--crimson)}
+.chip i{width:6px;height:6px;border-radius:50%;background:var(--crimson);animation:pulse 1.4s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.title{font-family:var(--latin);font-weight:900;color:var(--crimson);line-height:.88;margin-top:14px;
+  text-shadow:0 2px 0 rgba(255,255,255,.8)}
+.title .t1{display:block;font-size:clamp(52px,16vw,76px);letter-spacing:-1px}
+.title .t2{display:block;font-size:clamp(84px,27vw,124px);letter-spacing:-3px;margin-top:-2px}
+.hand{font-family:var(--hand);font-size:22px;color:var(--brown);transform:rotate(-4deg);margin-top:6px;position:relative}
+.hand svg{display:block;margin:-2px auto 0;width:150px;height:14px}
+.lead{font-family:var(--serif);font-weight:900;color:var(--brown);font-size:21px;line-height:1.45;margin-top:16px}
+.lead em{font-style:normal;color:var(--crimson)}
+.divider{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:13px;color:var(--brown);margin:10px 0 2px;width:100%}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--brown);opacity:.5}
+
+.steps{display:flex;gap:8px;width:100%;margin-top:14px}
+.step{flex:1;background:rgba(255,255,255,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  border-radius:14px;padding:12px 6px 10px;box-shadow:0 0 0 1px var(--line) inset}
+.step b{display:grid;place-items:center;width:24px;height:24px;margin:0 auto 6px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--crimson));color:#fff;font-size:12px}
+.step span{font-size:11.5px;font-weight:700;line-height:1.35;color:var(--ink)}
+
+.cta-wrap{width:100%;max-width:420px;padding:12px 0 8px}
+.btn-primary{position:relative;width:100%;height:56px;border-radius:14px;
+  background:linear-gradient(100deg,var(--pink) 0%,var(--crimson) 55%,var(--crimson-d) 100%);
+  color:#fff;font-size:17px;font-weight:800;letter-spacing:.04em;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 8px 20px rgba(215,25,77,.32);transition:transform .12s}
+.btn-primary:active{transform:scale(.97)}
+.btn-primary svg{width:22px;height:22px}
+.btn-primary::after{content:"";position:absolute;inset:0;border-radius:inherit;
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);
+  background-size:250% 100%;animation:shine 2.8s infinite}
+@keyframes shine{0%{background-position:150% 0}60%,100%{background-position:-60% 0}}
+.btn-secondary{height:52px;border-radius:14px;background:#fff;color:var(--ink);font-size:15px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 0 0 1px #DBDBDB inset;transition:transform .12s}
+.btn-secondary:active{transform:scale(.97);background:#FAFAFA}
+.btn-secondary svg{width:20px;height:20px}
+.host{font-size:10px;color:#555;letter-spacing:.06em;margin-top:12px;font-weight:700}
+.host small{display:block;font-size:9px;color:var(--sub);margin-bottom:2px}
+
+/* ===== プレイ ===== */
+.play-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:420px}
+.your{font-family:var(--serif);font-weight:900;color:var(--brown);font-size:16px;letter-spacing:.1em}
+.compact{position:relative;width:min(74vw,300px);aspect-ratio:1;margin:18px 0 10px}
+.compact .ring{position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,#F7D9A0,#C9974B,#FCEBC6,#B98636,#F7D9A0,#D9AE62,#F7D9A0);
+  box-shadow:0 18px 40px rgba(120,60,30,.22),0 0 0 2px #fff inset}
+.compact .ring::before{content:"";position:absolute;inset:-12px;border-radius:50%;
+  border:2px dashed rgba(215,25,77,.35)}
+.compact.spinning .ring::before{animation:rot 1.2s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.mirror{position:absolute;inset:12px;border-radius:50%;overflow:hidden;
+  background:radial-gradient(circle at 50% 50%,#fff 0%,#fff 48%,#FFF1F4 75%,#F8DCE3 100%);
+  box-shadow:inset 0 4px 14px rgba(170,60,90,.25),inset 0 -6px 18px rgba(255,255,255,.9);
+  display:grid;place-items:center}
+.mirror::after{content:"";position:absolute;top:6%;left:16%;width:30%;height:14%;border-radius:50%;
+  background:linear-gradient(160deg,rgba(255,255,255,.95),rgba(255,255,255,0));transform:rotate(-25deg);pointer-events:none}
+.num{font-family:var(--latin);font-weight:900;color:var(--crimson);line-height:1;
+  font-size:clamp(104px,32vw,150px);letter-spacing:-2px;font-variant-numeric:lining-nums tabular-nums;
+  font-feature-settings:"lnum" 1,"tnum" 1;color:#C8103F;
+  text-shadow:0 2px 0 #fff,0 0 18px rgba(255,255,255,.9);transition:filter .25s;position:relative;z-index:1}
+.compact.spinning .num{animation:jit .08s steps(2) infinite}
+@keyframes jit{50%{transform:translateY(2px) scale(.98)}}
+.num.pop{animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop{0%{transform:scale(.4)}100%{transform:scale(1)}}
+.mirror.hidden .num{filter:blur(22px)}
+.cover{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  color:var(--crimson);font-size:13px;font-weight:700;z-index:2}
+.cover svg{width:34px;height:34px}
+.mirror.hidden .cover{display:flex}
+
+.status{height:62px;display:flex;align-items:center;justify-content:center}
+.drum{font-family:var(--hand);font-size:24px;color:var(--brown);letter-spacing:.06em}
+.drum span{display:inline-block;animation:bob .5s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-5px)}}
+.letsgo{display:none;font-family:var(--latin);font-style:italic;font-weight:800;font-size:46px;color:var(--crimson);
+  align-items:center;gap:6px}
+.letsgo svg{width:36px;height:36px}
+.letsgo.show{display:flex;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
+
+.secret{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--brown);
+  background:rgba(255,255,255,.85);padding:7px 14px;border-radius:999px;box-shadow:0 0 0 1px var(--line) inset;
+  opacity:0;transition:opacity .3s}
+.secret.show{opacity:1}
+.secret svg{width:14px;height:14px}
+
+.play-actions{width:100%;max-width:420px;display:grid;grid-template-columns:1fr 1.4fr;gap:10px;padding:12px 0 6px;
+  opacity:0;pointer-events:none;transition:opacity .3s}
+.play-actions.show{opacity:1;pointer-events:auto}
+.link-btn{font-size:13px;font-weight:700;color:var(--crimson);padding:10px;display:inline-flex;align-items:center;gap:4px;
+  opacity:0;transition:opacity .3s}
+.link-btn.show{opacity:1}
+.link-btn svg{width:16px;height:16px}
+
+/* ===== ボトムシート（Instagram風） ===== */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20;opacity:0;pointer-events:none;transition:opacity .25s}
+.sheet-bg.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:21;background:#fff;border-radius:16px 16px 0 0;
+  max-height:80dvh;display:flex;flex-direction:column;transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.9,.3,1);
+  padding-bottom:env(safe-area-inset-bottom)}
+.sheet.open{transform:none}
+.grab{width:36px;height:4px;border-radius:2px;background:#DBDBDB;margin:8px auto 4px}
+.sheet-head{text-align:center;font-weight:700;font-size:16px;padding:8px 16px 12px;border-bottom:1px solid var(--line)}
+.sheet-body{overflow:auto;padding:12px 16px 16px}
+.rule{display:flex;gap:12px;padding:10px 0;text-align:left}
+.rule b{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;color:#fff;
+  background:linear-gradient(135deg,var(--pink),var(--crimson))}
+.rule p{font-size:14px;line-height:1.6}
+.rule p small{display:block;color:var(--sub);font-size:12px}
+.topic-card{background:linear-gradient(135deg,#FFF0F4,#FFF8EC);border-radius:14px;padding:18px 14px;margin:6px 0 12px;text-align:center}
+.topic-card small{font-size:11px;color:var(--sub);font-weight:700;letter-spacing:.1em}
+.topic-card p{font-family:var(--serif);font-weight:900;font-size:19px;color:var(--brown);margin-top:6px;line-height:1.5}
+.topic-card .scale{display:flex;justify-content:space-between;font-size:11px;color:var(--crimson);font-weight:700;margin-top:10px}
+.topic-list{list-style:none}
+.topic-list li{padding:12px 4px;border-bottom:1px solid var(--line);font-size:14px;text-align:left;display:flex;gap:10px}
+.topic-list li span{color:var(--crimson);font-weight:800;width:20px;flex:none}
+
+/* ===== キラキラ ===== */
+#fx{position:fixed;inset:0;z-index:10;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);
+  background:#262626;color:#fff;font-size:13px;font-weight:600;padding:10px 16px;border-radius:10px;opacity:0;
+  transition:.25s;z-index:30;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* 小さいスマホ（iPhone SE・Android小型） */
+@media (max-height:620px){
+  .title .t1{font-size:40px!important}.title .t2{font-size:66px!important}
+  .hand{font-size:18px}.lead{font-size:16px!important;margin-top:6px!important}
+  .divider{margin:6px 0 0}.step{padding:8px 4px}.steps{margin-top:8px!important}
+  .compact{width:min(56vw,200px)!important;margin:10px 0 4px}
+  .num{font-size:84px!important}.letsgo{font-size:36px}.status{height:50px}
+  .btn-primary{height:50px}.btn-secondary{height:48px}
+}
+@media (max-width:340px){.step span{font-size:10.5px}.secret{font-size:11.5px}}
+/* 横向き */
+.rotate{display:none}
+@media (orientation:landscape) and (max-height:500px){
+  .rotate{position:fixed;inset:0;z-index:50;background:var(--cream);display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:12px;font-weight:700;color:var(--brown)}
+  .rotate svg{width:44px;height:44px;color:var(--crimson)}
+}
+@media (max-height:680px){
+  .title .t1{font-size:48px}.title .t2{font-size:80px}
+  .lead{font-size:18px;margin-top:10px}.steps{margin-top:10px}
+  .compact{width:min(62vw,240px)}
+}
+</style>
+</head>
+<body>
+
+<!-- 水彩背景 -->
+<div class="bg" aria-hidden="true">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="blob b4"></div><div class="blob b5"></div><div class="blob b6"></div>
+  <svg class="stroke" style="top:70px;left:-30px;width:180px" viewBox="0 0 200 80"><path d="M5 60 C50 10,120 70,195 18" stroke="#8ACDF2" stroke-width="16" fill="none" stroke-linecap="round" opacity=".7"/><path d="M15 66 C60 24,120 78,190 30" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".8"/></svg>
+  <svg class="stroke" style="top:44%;right:-40px;width:170px" viewBox="0 0 200 80"><path d="M5 40 C60 70,130 5,195 45" stroke="#FFD95E" stroke-width="15" fill="none" stroke-linecap="round" opacity=".7"/></svg>
+  <svg class="stroke" style="bottom:20%;left:-50px;width:170px" viewBox="0 0 200 80"><path d="M5 30 C70 70,120 0,195 50" stroke="#B6DF9A" stroke-width="14" fill="none" stroke-linecap="round" opacity=".7"/></svg>
+  <svg class="stroke" style="bottom:4%;right:-20px;width:190px" viewBox="0 0 200 80"><path d="M5 55 C60 15,140 70,195 20" stroke="#8ACDF2" stroke-width="16" fill="none" stroke-linecap="round" opacity=".6"/></svg>
+  <div class="dots">
+    <span style="width:14px;height:14px;top:16%;left:12%"></span>
+    <span style="width:9px;height:9px;top:21%;left:20%"></span>
+    <span style="width:18px;height:18px;top:58%;right:9%"></span>
+    <span style="width:10px;height:10px;top:63%;right:17%"></span>
+    <span style="width:12px;height:12px;bottom:28%;left:8%"></span>
+    <span style="width:8px;height:8px;top:12%;right:22%"></span>
+  </div>
+</div>
+
+<canvas id="fx"></canvas>
+
+<div class="app">
+  <header class="topbar">
+    <div class="icons" style="margin-left:auto">
+      <button class="icon-btn" id="soundBtn" aria-label="サウンド切替">
+        <svg id="icoSoundOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
+        <svg id="icoSoundOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+      </button>
+      <button class="icon-btn" id="helpBtn" aria-label="遊び方">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.5-3 4"/><circle cx="12" cy="17.5" r=".6" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ホーム -->
+  <section class="screen active" id="home">
+    <div class="home-main">
+      <span class="chip"><i></i>BREAK TIME GAME</span>
+      <h1 class="title"><span class="t1">Beauty</span><span class="t2">ito</span></h1>
+      <div class="hand">数字は自分だけのヒミツ！
+        <svg viewBox="0 0 150 14"><path d="M3 9 Q12 2 20 9 T37 9 T54 9 T71 9 T88 9 T105 9 T122 9 T146 7" stroke="#F2557E" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <p class="lead">コスメの言葉で<br><em>数字</em>を伝え合おう！</p>
+      <div class="divider">1〜100 の数字をひく</div>
+      <div class="steps">
+        <div class="step"><b>1</b><span>数字を<br>ひく</span></div>
+        <div class="step"><b>2</b><span>お題で<br>たとえる</span></div>
+        <div class="step"><b>3</b><span>小さい順に<br>出す</span></div>
+      </div>
+    </div>
+    <div class="cta-wrap">
+      <button class="btn-primary" id="startBtn">
+        ゲームを開始する
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+      </button>
+      <p class="host"><small>主催</small>TEAM DREAM JAPAN PROJECT</p>
+    </div>
+  </section>
+
+  <!-- プレイ -->
+  <section class="screen" id="play">
+    <div class="play-main">
+      <p class="your">あなたの数字</p>
+      <div class="compact" id="compact">
+        <div class="ring"></div>
+        <div class="mirror" id="mirror">
+          <span class="num" id="num">00</span>
+          <div class="cover">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+            タップで表示
+          </div>
+        </div>
+      </div>
+      <div class="status">
+        <div class="drum" id="drum"></div>
+        <div class="letsgo" id="letsgo">Let's go!
+          <svg viewBox="0 0 24 24" fill="none" stroke="#F2557E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+        </div>
+      </div>
+      <span class="secret" id="secret">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        数字は他の人に見せないでね
+      </span>
+    </div>
+    <div class="play-actions" id="actions">
+      <button class="btn-secondary" id="hideBtn">
+        <svg id="icoEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10 10 0 0 1 12 19c-6.5 0-10-7-10-7a18 18 0 0 1 5.1-5.9M9.9 5.2A9 9 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.2 3.2M1 1l22 22"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/></svg>
+        <span id="hideTxt">隠す</span>
+      </button>
+      <button class="btn-primary" id="againBtn" style="height:52px;font-size:15px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+        次のラウンド
+      </button>
+    </div>
+  </section>
+</div>
+
+<!-- ボトムシート -->
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="grab"></div>
+  <div class="sheet-head" id="sheetTitle">遊び方</div>
+  <div class="sheet-body" id="sheetBody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="rotate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>スマホを縦向きにしてね</div>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+
+  let soundOn = true, busy = false, hidden = false, actx = null;
+
+  /* ---------- スマホ対応 ---------- */
+  // 実際の表示高さに合わせる（iOSのアドレスバー対策）
+  const setH = () => document.documentElement.style.setProperty("--appH", (window.visualViewport ? visualViewport.height : innerHeight) + "px");
+  setH(); addEventListener("resize", setH); addEventListener("orientationchange", () => setTimeout(setH, 300));
+  if(window.visualViewport) visualViewport.addEventListener("resize", setH);
+  // ピンチ・ダブルタップでのズーム防止（iOS）
+  ["gesturestart","gesturechange"].forEach(t => document.addEventListener(t, e => e.preventDefault(), {passive:false}));
+  let lastTouch = 0;
+  document.addEventListener("touchend", e => { const n = Date.now(); if(n - lastTouch < 300 && !e.target.closest("button")) e.preventDefault(); lastTouch = n; }, {passive:false});
+  // iOSで音を鳴らせるように最初のタッチで解除
+  const unlock = () => { const a = ac(); if(a){ const b = a.createBuffer(1,1,22050), src = a.createBufferSource(); src.buffer = b; src.connect(a.destination); src.start(0); } };
+  document.addEventListener("touchstart", unlock, {once:true, passive:true});
+  document.addEventListener("click", unlock, {once:true});
+  // ゲーム中は画面を暗くしない
+  let lock = null;
+  async function keepAwake(){ try{ if("wakeLock" in navigator && !lock){ lock = await navigator.wakeLock.request("screen"); lock.addEventListener("release", () => lock = null); } }catch(e){} }
+  document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && $("play").classList.contains("active")) keepAwake(); });
+  const vib = p => { try{ if(navigator.vibrate) navigator.vibrate(p); }catch(e){} };
+  // 数字を保存（再読み込み・誤タップで消えないように）
+  const store = { get(){ try{ return sessionStorage.getItem("ito-num"); }catch(e){ return null; } }, set(v){ try{ sessionStorage.setItem("ito-num", v); }catch(e){} } };
+
+  /* ---------- サウンド ---------- */
+  function ac(){ if(!actx){ try{ actx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } if(actx && actx.state==="suspended") actx.resume(); return actx; }
+  function tone(freq, dur, type="sine", vol=.12, when=0){
+    if(!soundOn) return; const a = ac(); if(!a) return;
+    const t = a.currentTime + when, o = a.createOscillator(), g = a.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t+.005);
+    g.gain.exponentialRampToValueAtTime(.0001, t+dur);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t+dur+.02);
+  }
+  const tick = () => tone(1400 + Math.random()*500, .035, "triangle", .07);
+  const chime = () => { [1046.5,1318.5,1568,2093].forEach((f,i)=>tone(f,.9,"sine",.11,i*.07)); tone(2637,.6,"triangle",.04,.3); };
+
+  $("soundBtn").onclick = () => {
+    soundOn = !soundOn;
+    $("icoSoundOn").style.display = soundOn ? "" : "none";
+    $("icoSoundOff").style.display = soundOn ? "none" : "";
+    toast(soundOn ? "サウンド ON" : "サウンド OFF");
+  };
+
+  /* ---------- 画面切替 ---------- */
+  function show(id){ document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active", s.id===id)); }
+
+  /* ---------- 乱数 ---------- */
+  function rand100(){
+    // 暗号用乱数＋棄却法で1〜100を完全に等確率（各1%）にする
+    const LIMIT = 4294967200; // 100の倍数（2^32未満の最大）
+    const u = new Uint32Array(1);
+    do { crypto.getRandomValues(u); } while (u[0] >= LIMIT);
+    return (u[0] % 100) + 1;
+  }
+
+  /* ---------- ドゥルルル演出 ---------- */
+  function draw(){
+    if(busy) return; busy = true;
+    const final = rand100(); store.set(final);
+    const num = $("num"), compact = $("compact");
+    setHidden(false);
+    $("letsgo").classList.remove("show"); $("drum").style.display = "";
+    ["secret"].forEach(i=>$(i).classList.remove("show"));
+    $("actions").classList.remove("show");
+    compact.classList.add("spinning");
+
+    let delay = 40, last = 0;
+    const step = () => {
+      let n; do { n = rand100(); } while(n === last); last = n;
+      num.textContent = n; tick();
+      vib(8);
+      delay *= 1.085;
+      if(delay < 360) setTimeout(step, delay);
+      else setTimeout(reveal, 420);
+    };
+    const reveal = () => {
+      compact.classList.remove("spinning");
+      num.textContent = final;
+      num.classList.remove("pop"); void num.offsetWidth; num.classList.add("pop");
+      $("drum").style.display = "none"; $("letsgo").classList.add("show");
+      chime(); vib([30,40,60]);
+      burst();
+      setTimeout(()=>{ ["secret"].forEach(i=>$(i).classList.add("show")); $("actions").classList.add("show"); busy=false; }, 500);
+    };
+    step();
+  }
+
+  $("startBtn").onclick = () => { ac(); keepAwake(); show("play"); setTimeout(draw, 350); };
+  // 前にひいた数字があれば、そのまま表示
+  const saved = store.get();
+  if(saved){
+    show("play"); $("num").textContent = saved; $("drum").style.display = "none";
+    $("letsgo").classList.add("show"); $("secret").classList.add("show"); $("actions").classList.add("show");
+    keepAwake();
+  }
+  $("againBtn").onclick = () => draw();
+
+  /* ---------- 隠す ---------- */
+  function setHidden(v){
+    hidden = v; $("mirror").classList.toggle("hidden", v);
+    $("hideTxt").textContent = v ? "表示する" : "隠す";
+  }
+  $("hideBtn").onclick = () => setHidden(!hidden);
+  $("mirror").onclick = () => { if(hidden) setHidden(false); };
+
+  /* ---------- ボトムシート ---------- */
+  function openSheet(title, html){
+    $("sheetTitle").textContent = title; $("sheetBody").innerHTML = html;
+    $("sheet").classList.add("open"); $("sheetBg").classList.add("open");
+  }
+  function closeSheet(){ $("sheet").classList.remove("open"); $("sheetBg").classList.remove("open"); }
+  $("sheetBg").onclick = closeSheet;
+
+  // 下スワイプで閉じる
+  let sy = null;
+  $("sheet").addEventListener("touchstart", e => { if($("sheetBody").scrollTop <= 0) sy = e.touches[0].clientY; }, {passive:true});
+  $("sheet").addEventListener("touchmove", e => { if(sy!==null){ const d = e.touches[0].clientY - sy; if(d>0) $("sheet").style.transform = `translateY(${d}px)`; } }, {passive:true});
+  $("sheet").addEventListener("touchend", e => {
+    if(sy===null) return; const d = e.changedTouches[0].clientY - sy; sy = null;
+    $("sheet").style.transform = ""; if(d > 90) closeSheet();
+  });
+
+  $("helpBtn").onclick = () => openSheet("遊び方", `
+    <div class="rule"><b>1</b><p>全員がこのサイトで<strong>1〜100の数字</strong>をひく<small>数字は自分だけのヒミツ。見せたり言ったりはNG！</small></p></div>
+    <div class="rule"><b>2</b><p>みんなで<strong>お題</strong>をひとつ決める<small>例：「気分が上がるコスメの値段」</small></p></div>
+    <div class="rule"><b>3</b><p>自分の数字を<strong>お題に合わせてたとえる</strong><small>小さい数字ほど控えめ、大きいほど最強に！ 例：「100円ショップのリップ」「デパコスの限定パレット」</small></p></div>
+    <div class="rule"><b>4</b><p>全員で相談して、<strong>小さい順</strong>に1人ずつ数字を公開<small>最後まで順番どおりに出せたら全員の勝ち！</small></p></div>
+  `);
+
+  /* ---------- トースト ---------- */
+  let tt; function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("show"),1400); }
+
+  /* ---------- キラキラ（グリッター） ---------- */
+  const cv = $("fx"), cx = cv.getContext("2d"); let parts = [], raf = null;
+  function fit(){ const r = devicePixelRatio||1; cv.width = innerWidth*r; cv.height = innerHeight*r; cx.setTransform(r,0,0,r,0,0); }
+  addEventListener("resize", fit); fit();
+  const COLORS = ["#D7194D","#F2557E","#FFB4C4","#D9B26A","#F7D9A0","#8ACDF2","#FFD95E","#B6DF9A"];
+  function burst(){
+    const r = $("compact").getBoundingClientRect(), ox = r.left + r.width/2, oy = r.top + r.height/2;
+    for(let i=0;i<110;i++){
+      const a = Math.random()*Math.PI*2, s = 3 + Math.random()*8;
+      parts.push({x:ox,y:oy,vx:Math.cos(a)*s,vy:Math.sin(a)*s-3,life:1,size:3+Math.random()*6,
+        c:COLORS[i%COLORS.length],star:Math.random()<.35,rot:Math.random()*6,vr:(Math.random()-.5)*.3});
+    }
+    if(!raf) loop();
+  }
+  function sparkle(x,y,s){ cx.beginPath(); for(let i=0;i<4;i++){ const a=i*Math.PI/2; cx.lineTo(x+Math.cos(a)*s*1.6,y+Math.sin(a)*s*1.6); cx.lineTo(x+Math.cos(a+Math.PI/4)*s*.4,y+Math.sin(a+Math.PI/4)*s*.4);} cx.closePath(); cx.fill(); }
+  function loop(){
+    cx.clearRect(0,0,innerWidth,innerHeight);
+    parts = parts.filter(p=>p.life>0);
+    for(const p of parts){
+      p.vy += .18; p.vx *= .985; p.x += p.vx; p.y += p.vy; p.life -= .012; p.rot += p.vr;
+      cx.globalAlpha = Math.max(p.life,0); cx.fillStyle = p.c;
+      cx.save(); cx.translate(p.x,p.y); cx.rotate(p.rot);
+      if(p.star) sparkle(0,0,p.size); else { cx.beginPath(); cx.arc(0,0,p.size/2,0,7); cx.fill(); }
+      cx.restore();
+    }
+    cx.globalAlpha = 1;
+    raf = parts.length ? requestAnimationFrame(loop) : (cx.clearRect(0,0,innerWidth,innerHeight), null);
+  }
+})();
+</script>
+</body>
+</html>
