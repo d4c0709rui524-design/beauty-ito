@@ -157,6 +157,15 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
 .letsgo svg{width:36px;height:36px}
 .letsgo.show{display:flex;animation:pop .6s cubic-bezier(.2,1.6,.4,1)}
 
+.theme{width:100%;max-width:340px;background:rgba(255,255,255,.88);border-radius:14px;padding:10px 14px 9px;
+  box-shadow:0 0 0 1px var(--line) inset,0 4px 14px rgba(215,25,77,.08);margin-top:12px}
+.theme small{display:block;font-size:10px;font-weight:800;letter-spacing:.14em;color:var(--crimson)}
+.theme p{font-family:var(--serif);font-weight:900;color:var(--brown);font-size:15.5px;line-height:1.45;margin-top:3px}
+.theme .scale{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:7px;font-size:10.5px;font-weight:700;color:var(--sub)}
+.theme .scale i{flex:1;height:4px;border-radius:2px;background:linear-gradient(90deg,#FFD3DE,var(--crimson))}
+.theme .scale b{color:var(--crimson)}
+.play-main .theme{margin:0 0 10px}
+@media (max-height:620px){.theme{padding:7px 12px}.theme p{font-size:13.5px}.home-main .theme{margin-top:6px}}
 .secret{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--brown);
   background:rgba(255,255,255,.85);padding:7px 14px;border-radius:999px;box-shadow:0 0 0 1px var(--line) inset;
   opacity:0;transition:opacity .3s}
@@ -210,6 +219,7 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
   .num{font-size:84px!important}.letsgo{font-size:36px}.status{height:50px}
   .btn-primary{height:50px}.btn-secondary{height:48px}
 }
+@media (max-height:700px){.home-main .divider,.home-main .steps{display:none}}
 @media (max-width:340px){.step span{font-size:10.5px}.secret{font-size:11.5px}}
 /* 横向き */
 .rotate{display:none}
@@ -269,6 +279,8 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
         <svg viewBox="0 0 150 14"><path d="M3 9 Q12 2 20 9 T37 9 T54 9 T71 9 T88 9 T105 9 T122 9 T146 7" stroke="#F2557E" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>
       </div>
       <p class="lead">コスメの言葉で<br><em>数字</em>を伝え合おう！</p>
+      <div class="theme"><small>TODAY'S THEME</small><p>寝坊した朝に必ず使う<br>コスメ・スキンケア</p>
+        <div class="scale"><span>1 なくても平気</span><i></i><b>絶対手放せない 100</b></div></div>
       <div class="divider">1〜100 の数字をひく</div>
       <div class="steps">
         <div class="step"><b>1</b><span>数字を<br>ひく</span></div>
@@ -288,6 +300,8 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
   <!-- プレイ -->
   <section class="screen" id="play">
     <div class="play-main">
+      <div class="theme"><small>TODAY'S THEME</small><p>寝坊した朝に必ず使う<br>コスメ・スキンケア</p>
+        <div class="scale"><span>1 なくても平気</span><i></i><b>絶対手放せない 100</b></div></div>
       <p class="your">あなたの数字</p>
       <div class="compact" id="compact">
         <div class="ring"></div>
@@ -462,8 +476,8 @@ button{font-family:inherit;border:0;background:none;color:inherit;cursor:pointer
 
   $("helpBtn").onclick = () => openSheet("遊び方", `
     <div class="rule"><b>1</b><p>全員がこのサイトで<strong>1〜100の数字</strong>をひく<small>数字は自分だけのヒミツ。見せたり言ったりはNG！</small></p></div>
-    <div class="rule"><b>2</b><p>みんなで<strong>お題</strong>をひとつ決める<small>例：「気分が上がるコスメの値段」</small></p></div>
-    <div class="rule"><b>3</b><p>自分の数字を<strong>お題に合わせてたとえる</strong><small>小さい数字ほど控えめ、大きいほど最強に！ 例：「100円ショップのリップ」「デパコスの限定パレット」</small></p></div>
+    <div class="rule"><b>2</b><p>みんなで<strong>お題</strong>をひとつ決める<small>例：「寝坊した朝に必ず使うコスメ・スキンケア」</small></p></div>
+    <div class="rule"><b>3</b><p>自分の数字を<strong>お題に合わせてたとえる</strong><small>小さい数字ほど控えめ、大きいほど最強に！ 例：小さい数字なら「つけまつげ」、大きい数字なら「日焼け止め」や「眉マスカラ」</small></p></div>
     <div class="rule"><b>4</b><p>全員で相談して、<strong>小さい順</strong>に1人ずつ数字を公開<small>最後まで順番どおりに出せたら全員の勝ち！</small></p></div>
   `);
 
